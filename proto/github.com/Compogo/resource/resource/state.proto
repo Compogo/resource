@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package compogo.resource.resource;
+
+option go_package = "github.com/Compogo/resource/protobuf/resource";
+
+enum State {
+    Normal = 0;
+    Warning = 1;
+    Alarm = 2;
+}

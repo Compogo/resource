@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package compogo.resource.resource;
+
+option go_package = "github.com/Compogo/resource/protobuf/resource";
+
+enum Type {
+  Memory = 0;
+  CPU = 1;
+}

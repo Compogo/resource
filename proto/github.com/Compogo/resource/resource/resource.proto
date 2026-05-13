@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package compogo.resource.resource;
+
+option go_package = "github.com/Compogo/resource/protobuf/resource";
+
+import "github.com/Compogo/resource/resource/type.proto";
+
+message Resource {
+  Type Type = 1;
+  uint64 Limit = 2;
+  uint64 Usage = 3;
+}
