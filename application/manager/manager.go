@@ -4,12 +4,15 @@ import (
 	"context"
 	"sync"
 
-	"github.com/Compogo/compogo/closer"
+	"github.com/Compogo/compogo"
 	"github.com/Compogo/resource/domain"
 	"github.com/Compogo/resource/infrastructure/resource/cgroup"
 	"github.com/Compogo/types/emitter"
 )
 
+// Manager — менеджер ресурсов.
+// Собирает статистику использования CPU и Memory через cgroup.
+// При изменении ресурсов генерирует событие OnChangeResource.
 type Manager struct {
 	OnChangeResource emitter.Emitter[*domain.Resource]
 
@@ -19,10 +22,11 @@ type Manager struct {
 	cpu    domain.Resource
 	memory domain.Resource
 
-	closer closer.Closer
+	closer compogo.Closer
 }
 
-func NewManager(closer closer.Closer) *Manager {
+// NewManager создаёт новый менеджер ресурсов.
+func NewManager(closer compogo.Closer) *Manager {
 	m := &Manager{
 		OnChangeResource: emitter.NewEmitter[*domain.Resource](),
 		cgroup:           cgroup.NewCGroup(),
@@ -35,6 +39,8 @@ func NewManager(closer closer.Closer) *Manager {
 	return m
 }
 
+// Process собирает статистику ресурсов и генерирует события при изменениях.
+// Вызывается периодически через Repeater.
 func (manager *Manager) Process(_ context.Context) error {
 	stat, err := manager.cgroup.Stat()
 	if err != nil {
@@ -79,12 +85,14 @@ func (manager *Manager) Process(_ context.Context) error {
 	return nil
 }
 
+// CPU возвращает текущий CPU ресурс.
 func (manager *Manager) CPU() *domain.Resource {
 	manager.rwm.RLock()
 	defer manager.rwm.RUnlock()
 	return &manager.cpu
 }
 
+// Memory возвращает текущий Memory ресурс.
 func (manager *Manager) Memory() *domain.Resource {
 	manager.rwm.RLock()
 	defer manager.rwm.RUnlock()

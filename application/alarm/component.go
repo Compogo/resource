@@ -1,21 +1,23 @@
 package alarm
 
 import (
-	"github.com/Compogo/compogo/component"
-	"github.com/Compogo/compogo/container"
+	"github.com/Compogo/compogo"
 	"github.com/Compogo/resource/application/manager"
 	"github.com/Compogo/resource/infrastructure/config/alarm"
 )
 
-var Component = &component.Component{
-	Dependencies: component.Components{
-		manager.Component,
-		alarm.Component,
+// Component — компонент алертов ресурсов.
+// Подписывается на изменения ресурсов и генерирует события при достижении порогов.
+var Component = &compogo.Component{
+	Name: "resource.alarm",
+	Dependencies: compogo.Components{
+		&manager.Component,
+		&alarm.Component,
 	},
-	Init: component.StepFunc(func(container container.Container) error {
+	Init: compogo.StepFunc(func(container compogo.Container) error {
 		return container.Provide(NewAlarm)
 	}),
-	PreExecute: component.StepFunc(func(container container.Container) error {
+	PreExecute: compogo.StepFunc(func(container compogo.Container) error {
 		return container.Invoke(func(m *manager.Manager, a *Alarm) {
 			m.OnChangeResource.Subscribe(a.OnChangeResource)
 		})

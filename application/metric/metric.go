@@ -14,11 +14,14 @@ const (
 	MemoryLabel = "memory"
 )
 
+// Metric — сборщик метрик ресурсов.
+// Собирает метрики лимитов и использования CPU и Memory.
 type Metric struct {
 	limit *prometheus.GaugeVec
 	usage *prometheus.GaugeVec
 }
 
+// NewMetric создаёт новый сборщик метрик.
 func NewMetric(compogoConfig *compogo.Config) *Metric {
 	return &Metric{
 		limit: promauto.NewGaugeVec(prometheus.GaugeOpts{
@@ -34,6 +37,8 @@ func NewMetric(compogoConfig *compogo.Config) *Metric {
 	}
 }
 
+// OnChangeResource вызывается при изменении ресурсов.
+// Обновляет метрики.
 func (metric *Metric) OnChangeResource(_ context.Context, resource *domain.Resource) {
 	switch resource.Type {
 	case domain.CPU:

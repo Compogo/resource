@@ -3,9 +3,9 @@ module github.com/Compogo/resource
 go 1.26.1
 
 require (
-	github.com/Compogo/compogo v0.0.35
-	github.com/Compogo/repeater v0.0.5
-	github.com/Compogo/types v0.0.15
+	github.com/Compogo/compogo v1.0.0-rc1
+	github.com/Compogo/repeater v1.0.0-rc1
+	github.com/Compogo/types v1.0.0
 	github.com/galsondor/go-ascii v0.0.0-20151210013816-e2eb5175fb10
 	github.com/prometheus/client_golang v1.23.2
 	github.com/spf13/cast v1.10.0
@@ -13,8 +13,8 @@ require (
 )
 
 require (
-	github.com/Compogo/runner v0.0.14 // indirect
-	github.com/Compogo/tools v0.0.1 // indirect
+	github.com/Compogo/runner v1.0.2-rc1 // indirect
+	github.com/Compogo/tools v1.0.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect

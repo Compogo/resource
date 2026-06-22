@@ -4,22 +4,25 @@ import (
 	"context"
 	"sync/atomic"
 
-	"github.com/Compogo/compogo/closer"
+	"github.com/Compogo/compogo"
 	"github.com/Compogo/resource/domain"
 	"github.com/Compogo/resource/infrastructure/config/alarm"
 	"github.com/Compogo/types/emitter"
 )
 
+// Alarm — система алертов для ресурсов.
+// Отслеживает использование ресурсов и генерирует события при достижении порогов.
 type Alarm struct {
 	OnAlarm emitter.Emitter[domain.State]
 
 	config *alarm.Config
 	state  atomic.Uint32
 
-	closer closer.Closer
+	closer compogo.Closer
 }
 
-func NewAlarm(closer closer.Closer, config *alarm.Config) *Alarm {
+// NewAlarm создаёт новый Alarm.
+func NewAlarm(closer compogo.Closer, config *alarm.Config) *Alarm {
 	a := &Alarm{
 		OnAlarm: emitter.NewEmitter[domain.State](),
 		closer:  closer,
@@ -31,10 +34,13 @@ func NewAlarm(closer closer.Closer, config *alarm.Config) *Alarm {
 	return a
 }
 
+// State возвращает текущее состояние.
 func (alarm *Alarm) State() domain.State {
 	return domain.State(alarm.state.Load())
 }
 
+// OnChangeResource вызывается при изменении ресурсов.
+// Вычисляет процент использования и обновляет состояние.
 func (alarm *Alarm) OnChangeResource(_ context.Context, resource *domain.Resource) {
 	resourcePercentUsage := float32(float64(resource.Usage) / float64(resource.Limit))
 	newState := domain.Normal

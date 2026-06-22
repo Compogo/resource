@@ -1,19 +1,21 @@
 package metric
 
 import (
-	"github.com/Compogo/compogo/component"
-	"github.com/Compogo/compogo/container"
+	"github.com/Compogo/compogo"
 	"github.com/Compogo/resource/application/manager"
 )
 
-var Component = &component.Component{
-	Dependencies: component.Components{
-		manager.Component,
+// Component — компонент метрик ресурсов.
+// Подписывается на изменения ресурсов и обновляет метрики.
+var Component = compogo.Component{
+	Name: "resource.metrics",
+	Dependencies: compogo.Components{
+		&manager.Component,
 	},
-	Init: component.StepFunc(func(container container.Container) error {
+	Init: compogo.StepFunc(func(container compogo.Container) error {
 		return container.Provide(NewMetric)
 	}),
-	PreExecute: component.StepFunc(func(container container.Container) error {
+	PreExecute: compogo.StepFunc(func(container compogo.Container) error {
 		return container.Invoke(func(m *manager.Manager, metric *Metric) {
 			m.OnChangeResource.Subscribe(metric.OnChangeResource)
 		})
